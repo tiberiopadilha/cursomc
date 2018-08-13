@@ -7,10 +7,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.domain.Cidade;
+import com.nelioalves.cursomc.domain.Cliente;
+import com.nelioalves.cursomc.domain.Endereco;
 import com.nelioalves.cursomc.domain.Estado;
 import com.nelioalves.cursomc.domain.Produto;
+import com.nelioalves.cursomc.enums.TipoCliente;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
 import com.nelioalves.cursomc.repositories.CidadeRepository;
+import com.nelioalves.cursomc.repositories.ClienteRepository;
+import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.repositories.EstadoRepository;
 import com.nelioalves.cursomc.repositories.ProdutoRepository;
 
@@ -29,6 +34,12 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 
 	@Autowired
 	private CidadeRepository cidRepository;
+	
+	@Autowired
+	private ClienteRepository cliRepository;
+
+	@Autowired
+	private EnderecoRepository endRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -87,6 +98,29 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 		cidRepository.save(cid1);
 		cidRepository.save(cid2);
 		cidRepository.save(cid3);
+		
+		//cria o cliente e adiciona seus telefones
+		Cliente cli1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA);
+		cli1.getTelefones().add("27363323");
+		cli1.getTelefones().add("93838393");
+		
+		//cria os endereços e adiciona aos clientes e suas cidades
+		Endereco end1 = new Endereco(null, "Rua Flores", "300", "Apt 303", "Jardim", "38220834", cli1, cid1);
+		Endereco end2 = new Endereco(null, "Evenida Matos", "105", "Sala 800", "Centro", "38777012", cli1, cid2);
+		
+		cli1.getEnderecos().add(end1);
+		cli1.getEnderecos().add(end2);
+		
+		// salva cliente primeiro no banco de dados atraves de uma instancia da classe cliRepository pois sao independetes dos endereços
+		cliRepository.save(cli1);
+		
+		// depois salva os endereços no banco de dados atraves de uma instancia da classe endRepository
+		endRepository.save(end1);
+		endRepository.save(end2);
+
+		
+	
+		
 
 	}
 }
