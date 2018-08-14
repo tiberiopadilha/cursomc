@@ -32,12 +32,16 @@ public class Cliente implements Serializable{
 	// 1 cliente tem vários endereços
 	@JsonManagedReference //a classe cliente conhece seus endereços, mas não ao contrario
 	@OneToMany(mappedBy="cliente") //já foi mapeado na classe Endereco pelo campo cliente
-	private List<Endereco> enderecos = new ArrayList<>() ;
+	private List<Endereco> enderecos = new ArrayList<>() ;	
 	
 	//cliente tem varios telefones que nao podem ser repetidos, por isso Set
 	@ElementCollection //mapeado como entidade fraca
 	@CollectionTable(name="TELEFONE")//cria uma tabela fraca com o nome TELEFONE
 	private Set<String> telefones = new HashSet<>();
+	
+	//1 Cliente tem varios Pedidos. Cliente deve enxergar os pedidos
+	@OneToMany(mappedBy="cliente")//ja foi mapeado na classe cliente pelo atributo cliente
+	private List<Pedido> pedidos = new ArrayList<>();
 	
 	public Cliente() {		
 	}
@@ -105,6 +109,14 @@ public class Cliente implements Serializable{
 
 	public void setTelefones(Set<String> telefones) {
 		this.telefones = telefones;
+	}
+
+	public List<Pedido> getPedidos() {
+		return pedidos;
+	}
+
+	public void setPedidos(List<Pedido> pedidos) {
+		this.pedidos = pedidos;
 	}
 
 	@Override

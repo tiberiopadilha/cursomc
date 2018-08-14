@@ -1,5 +1,7 @@
 package com.nelioalves.cursomc;
 
+import java.text.SimpleDateFormat;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -10,13 +12,20 @@ import com.nelioalves.cursomc.domain.Cidade;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Endereco;
 import com.nelioalves.cursomc.domain.Estado;
+import com.nelioalves.cursomc.domain.Pagamento;
+import com.nelioalves.cursomc.domain.PagamentoComBoleto;
+import com.nelioalves.cursomc.domain.PagamentoComCartao;
+import com.nelioalves.cursomc.domain.Pedido;
 import com.nelioalves.cursomc.domain.Produto;
+import com.nelioalves.cursomc.enums.EstadoPagamento;
 import com.nelioalves.cursomc.enums.TipoCliente;
 import com.nelioalves.cursomc.repositories.CategoriaRepository;
 import com.nelioalves.cursomc.repositories.CidadeRepository;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.repositories.EstadoRepository;
+import com.nelioalves.cursomc.repositories.PagamentoRepository;
+import com.nelioalves.cursomc.repositories.PedidoRepository;
 import com.nelioalves.cursomc.repositories.ProdutoRepository;
 
 @SpringBootApplication
@@ -40,6 +49,12 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 
 	@Autowired
 	private EnderecoRepository endRepository;
+	
+	@Autowired
+	private PedidoRepository pedRepository;
+	
+	@Autowired
+	private PagamentoRepository pagRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -117,10 +132,28 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 		// depois salva os endereços no banco de dados atraves de uma instancia da classe endRepository
 		endRepository.save(end1);
 		endRepository.save(end2);
-
 		
-	
+		//classe para instanciar a data do pedido
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		
+		//cria os pedidos
+		Pedido ped1 = new Pedido(null, sdf.parse("30/09/2017 10:32"), cli1, end1);
+		Pedido ped2 = new Pedido(null, sdf.parse("10/10/2017 19:35"), cli1, end2);
+		
+		//cria e adiciona o pagamento ao pedido
+		Pagamento pagto1 =  new PagamentoComCartao(null, EstadoPagamento.QUITADO, ped1, 6);
+		ped1.setPagamento(pagto1);
+		Pagamento pagto2 =  new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("20/10/2017 00:00"), null);
+		ped2.setPagamento(pagto2);
+		//adiciona o pedido aos clientes
+		cli1.getPedidos().add(ped1);
+		cli1.getPedidos().add(ped2);
+		
+		//salva os pedidos e os pagamentos no banco de dados atraves de uma instancia das classes pedRepository pagRepository
+		pedRepository.save(ped1);
+		pedRepository.save(ped2);
+		pagRepository.save(pagto1);
+		pagRepository.save(pagto2);		
 
 	}
 }
