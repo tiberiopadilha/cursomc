@@ -10,6 +10,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Estado implements Serializable{
 	
@@ -21,6 +23,7 @@ public class Estado implements Serializable{
 	private String nome;
 	
 	//estado possui uma lista de cidades
+	@JsonBackReference //estado nao pode conhecer suas cidades(problema de referencia cíclica). Foi feito ao contrario na classe Cidade
 	@OneToMany(mappedBy="estado")//mapeamento reverso especificando o atributo que foi mapeado na classe cidade 
 	List<Cidade> cidades = new ArrayList<>();
 	

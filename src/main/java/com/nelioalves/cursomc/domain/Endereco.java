@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Endereco implements Serializable{	
 	private static final long serialVersionUID = 1L;
@@ -23,6 +25,7 @@ public class Endereco implements Serializable{
 	private String cep;
 	
 	// 1 endereço tem 1 cliente
+	@JsonBackReference //endereço nao pode conhecer seus clientes(problema de referencia cíclica). Foi feito ao contrario na classe Cliente
 	@ManyToOne //1 cliente tem muitos endereços
 	@JoinColumn(name="cliente_id")//cliente_id é a chave estrangeira da classe Cliente na classe Endereco no BD
 	private Cliente cliente;
