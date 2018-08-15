@@ -2,6 +2,8 @@ package com.nelioalves.cursomc.domain;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
 @Entity
@@ -34,6 +37,10 @@ public class Pedido implements Serializable{
 	@ManyToOne
 	@JoinColumn(name="endereco_de_entrega_id")//endereco_de_entrega_id é a chave estrangeira de Endereço na classe Pedido no BD
 	private Endereco enderecoDeEntrega;
+	
+	//Pedido conhece os Itens do Pedido associados a ele
+	@OneToMany(mappedBy="id.pedido") //ja foi mapeado do outro lado pelo id.pedido que tem a referencia para cada item do pedido
+	private Set<ItemPedido> itens = new HashSet<>(); //set garante que não vai haver itens repetidos no pedido
 	
 	public Pedido(){		
 	}
@@ -84,6 +91,14 @@ public class Pedido implements Serializable{
 
 	public void setEnderecoDeEntrega(Endereco enderecoDeEntrega) {
 		this.enderecoDeEntrega = enderecoDeEntrega;
+	}
+
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
 	}
 
 	@Override

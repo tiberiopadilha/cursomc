@@ -12,6 +12,7 @@ import com.nelioalves.cursomc.domain.Cidade;
 import com.nelioalves.cursomc.domain.Cliente;
 import com.nelioalves.cursomc.domain.Endereco;
 import com.nelioalves.cursomc.domain.Estado;
+import com.nelioalves.cursomc.domain.ItemPedido;
 import com.nelioalves.cursomc.domain.Pagamento;
 import com.nelioalves.cursomc.domain.PagamentoComBoleto;
 import com.nelioalves.cursomc.domain.PagamentoComCartao;
@@ -24,6 +25,7 @@ import com.nelioalves.cursomc.repositories.CidadeRepository;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
 import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.repositories.EstadoRepository;
+import com.nelioalves.cursomc.repositories.ItemPedidoRepository;
 import com.nelioalves.cursomc.repositories.PagamentoRepository;
 import com.nelioalves.cursomc.repositories.PedidoRepository;
 import com.nelioalves.cursomc.repositories.ProdutoRepository;
@@ -34,27 +36,22 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 	//instancias das classes repository para inserir no banco de dados
 	@Autowired
 	private CategoriaRepository catRepository;
-
 	@Autowired
 	private ProdutoRepository prodRepository;
-
 	@Autowired
 	private EstadoRepository estRepository;
-
 	@Autowired
-	private CidadeRepository cidRepository;
-	
+	private CidadeRepository cidRepository;	
 	@Autowired
 	private ClienteRepository cliRepository;
-
 	@Autowired
-	private EnderecoRepository endRepository;
-	
+	private EnderecoRepository endRepository;	
 	@Autowired
-	private PedidoRepository pedRepository;
-	
+	private PedidoRepository pedRepository;	
 	@Autowired
 	private PagamentoRepository pagRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CursomcApplication.class, args);
@@ -153,7 +150,24 @@ public class CursomcApplication implements CommandLineRunner { // interface que 
 		pedRepository.save(ped1);
 		pedRepository.save(ped2);
 		pagRepository.save(pagto1);
-		pagRepository.save(pagto2);		
-
+		pagRepository.save(pagto2);
+		
+		//cria os itens de pedido passando seus atributos como pedido, produto, desconto, quantidade e preco
+		ItemPedido itemPed1 = new ItemPedido(ped1, prod1, 0.00, 1, 2000.00);
+		ItemPedido itemPed2 = new ItemPedido(ped1, prod3, 0.00, 2, 80.00);
+		ItemPedido itemPed3 = new ItemPedido(ped2, prod2, 100.00, 1, 800.00);
+		
+		//fazer com que os pedidos e produtos conhecam seus itens
+		ped1.getItens().add(itemPed1);
+		ped1.getItens().add(itemPed2);
+		ped2.getItens().add(itemPed3);
+		prod1.getItens().add(itemPed1);
+		prod2.getItens().add(itemPed3);
+		prod3.getItens().add(itemPed2);
+		
+		//salva os itens de pedidos no banco de dados atraves de uma instancia das classes ItemPedidoRepository itemPedRepository
+		itemPedRepository.save(itemPed1);
+		itemPedRepository.save(itemPed2);
+		itemPedRepository.save(itemPed3);
 	}
 }

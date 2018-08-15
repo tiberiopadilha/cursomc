@@ -2,7 +2,9 @@ package com.nelioalves.cursomc.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -34,6 +37,10 @@ public class Produto implements Serializable{
 	           inverseJoinColumns = @JoinColumn(name= "categoria_id"))
 	private List<Categoria> categorias = new ArrayList<>();//cada produto possui uma ou varias categorias
 	
+	//Produto conhece os Itens do Pedido associados a ele
+	@OneToMany(mappedBy="id.produto") //ja foi mapeado do outro lado pelo id.produto que tem a referencia para cada item do pedido
+	private Set<ItemPedido> itens = new HashSet<>(); //set garante que não vai haver itens repetidos no pedido
+	
 	public Produto() {		
 	}
 	
@@ -42,6 +49,16 @@ public class Produto implements Serializable{
 		this.id = id;
 		this.nome = nome;
 		this.preco = preco;
+	}
+	
+	//produto conhece os seus pedidos. Então precisa de um metodo para pecorrer os pedidos em itempedidos, adicionando os itens aos pedidos
+	//e retornando uma lista dos pedidos
+	public List<Pedido> getPedidos(){
+		List<Pedido> lista = new ArrayList<>();
+		for (ItemPedido x : itens) {
+			lista.add(x.getPedido());
+		}
+		return lista;		
 	}
 
 	public Integer getId() {
@@ -75,6 +92,14 @@ public class Produto implements Serializable{
 	public void setCategorias(List<Categoria> categorias) {
 		this.categorias = categorias;
 	}
+	
+	public Set<ItemPedido> getItens() {
+		return itens;
+	}
+
+	public void setItens(Set<ItemPedido> itens) {
+		this.itens = itens;
+	}
 
 	@Override
 	public int hashCode() {
@@ -100,7 +125,4 @@ public class Produto implements Serializable{
 			return false;
 		return true;
 	}
-	
-	
-
 }
