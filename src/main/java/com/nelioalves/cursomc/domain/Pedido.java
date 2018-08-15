@@ -15,6 +15,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 public class Pedido implements Serializable{	
 	private static final long serialVersionUID = 1L;
@@ -22,13 +25,20 @@ public class Pedido implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	@JsonFormat(pattern="dd/MM/yyyy HH:mm")//para formatar a saida da hora de milisegundos para data, hora e minuto
 	private Date instante;
 	
 	//1 Pedido tem 1 Pagamento, com relação bidirecional com ids relacionados, o id do pagamento é o mesmo do pedido
+	@JsonManagedReference //como a relação pedido e pagamento é de mão dupla, deve deixa a referencia ser gerenciada pelo json para permitir...
+	//...somente os pagamentos serem serealizados(pedido conhecer os pagamentos), pois se permitir dos dois lados, dara erro na busca...
+	//... Essa referencia é gerenciada pelo json para vir os objetos(pagamentos) associados a cada pedido 
 	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")//cascate para salvar o pagamento relacionado com o pedido. MappedBy foi mapeado na classe pagamento pelo atributo pedido
 	private Pagamento pagamento;
 	
 	//1 Pedido tem 1 Cliente
+	@JsonManagedReference //como a relação pedido e cliente é de mão dupla, deve deixa a referencia ser gerenciada pelo json para permitir...
+	//...somente os clientes serem serealizados(pedido conhecer os clientes), pois se permitir dos dois lados, dara erro na busca...
+	//... Essa referencia é gerenciada pelo json para vir os objetos(clientes) associados a cada pedido 
 	@ManyToOne
 	@JoinColumn(name="cliente_id")//cliente_id é a chave estrangeira de Cliente na classe Pedido no BD
 	private Cliente cliente;

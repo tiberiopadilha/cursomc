@@ -20,11 +20,13 @@ public class Categoria implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private String nome;
+	private String nome;	
 	
-	//como existe uma relação muito para muitos entre Produtos e Categorias, mas já foi feito o mapeamento na classe produto
-	//nessa classe so precisará dizer que o mapeamento foi feito lá, na lista categorias
-	@JsonManagedReference //referencia gerenciada pelo json para vir os objetos associados 
+	@JsonManagedReference //como a relação categoria e produtos é de mão dupla, deve deixa a referencia ser gerenciada pelo json para...
+	//...permitir que somente os produtos sejam serealizados(categoria conhecer seus produtos), pois se permitir dos dois lados, dara...
+	//... erro na busca. Essa referencia é gerenciada pelo json para vir os objetos(produtos) associados a cada categoria 
+	//@ManyToMany: como existe uma relação muito para muitos entre Produtos e Categorias, mas já foi feito o mapeamento na classe produto
+    //mappedBy: nessa classe so precisará dizer que o mapeamento foi feito na classe Produto, na lista categorias
 	@ManyToMany(mappedBy="categorias")
 	private List<Produto> produtos = new ArrayList<>();//contem uma lista de produtos
 	

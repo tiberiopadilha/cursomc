@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Produto implements Serializable{
@@ -30,7 +31,7 @@ public class Produto implements Serializable{
 	
 	//como a relação entre Categoria e Produto é de muito pra muito, deve ser criada outra tabela que vamos chamar de PRODUTO_CATEGORIA
 	//contendo as chaves estrangeiras da duas tabelas
-	@JsonBackReference //diz que no outro lado da associação ja foram buscados os objetos e omite a busca para nao da busca cíclica
+	@JsonBackReference //diz que no outro lado(Categoria) da associação ja foram buscados os objetos e omite a busca para nao da busca cíclica
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA", 
 	           joinColumns = @JoinColumn(name= "produto_id"), 
@@ -39,6 +40,7 @@ public class Produto implements Serializable{
 	
 	//Produto conhece os Itens do Pedido associados a ele
 	@OneToMany(mappedBy="id.produto") //ja foi mapeado do outro lado pelo id.produto que tem a referencia para cada item do pedido
+	@JsonIgnore//pedir para o json ignorar e nao serializar a lista de itens associadas ao produto, pois oq importa é os itens saber quais produtos e nao ao contratrio
 	private Set<ItemPedido> itens = new HashSet<>(); //set garante que não vai haver itens repetidos no pedido
 	
 	public Produto() {		
@@ -53,6 +55,8 @@ public class Produto implements Serializable{
 	
 	//produto conhece os seus pedidos. Então precisa de um metodo para pecorrer os pedidos em itempedidos, adicionando os itens aos pedidos
 	//e retornando uma lista dos pedidos
+	@JsonIgnore //pedir para o json ignorar e nao serializar os pedidos relacionados com os produtos, pois oq é iniciado com get é serializado
+	//automaticamente, ocorrendo referencia cíclica
 	public List<Pedido> getPedidos(){
 		List<Pedido> lista = new ArrayList<>();
 		for (ItemPedido x : itens) {

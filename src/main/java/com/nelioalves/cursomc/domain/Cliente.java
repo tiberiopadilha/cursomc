@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.nelioalves.cursomc.enums.TipoCliente;
 
@@ -40,6 +41,7 @@ public class Cliente implements Serializable{
 	private Set<String> telefones = new HashSet<>();
 	
 	//1 Cliente tem varios Pedidos. Cliente deve enxergar os pedidos
+	@JsonBackReference //diz que no outro lado(Pedido) da associação ja foram buscados os objetos e omite a busca dos pedidos para nao da busca cíclica
 	@OneToMany(mappedBy="cliente")//ja foi mapeado na classe cliente pelo atributo cliente
 	private List<Pedido> pedidos = new ArrayList<>();
 	
