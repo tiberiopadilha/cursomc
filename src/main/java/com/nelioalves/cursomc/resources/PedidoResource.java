@@ -20,7 +20,7 @@ public class PedidoResource {
 	
 	//metodo de busca que recebe um id via get e chama o serviço da classe PedidoService para buscar o Pedido no BD
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)	
-	public ResponseEntity<?> find(@PathVariable Integer id) { 
+	public ResponseEntity<Pedido> find(@PathVariable Integer id) { 
 		Pedido obj = pedService.buscar(id);//vai no serviço buscar o objeto pelo id		
 		return ResponseEntity.ok().body(obj);
 	}

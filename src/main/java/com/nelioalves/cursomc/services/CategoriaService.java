@@ -28,5 +28,9 @@ public class CategoriaService {
 		cat.setId(null); //o objeto tem que ter um id nulo, ou seja, ainda não existir, para então ser salvo
 		return repo.save(cat);	
 	}
-
+	
+	public Categoria atualizar(Categoria cat) {
+		buscar(cat.getId());//chama o método buscar que ja tem uma implementacao para verificar se o objeto existe
+		return repo.save(cat);		
+	}
 }

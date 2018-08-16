@@ -20,7 +20,7 @@ public class ClienteResource {
 	
 	//metodo de busca que recebe um id via get e chama o serviço da classe ClienteService para buscar o Cliente no BD
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)	
-	public ResponseEntity<?> find(@PathVariable Integer id) { 
+	public ResponseEntity<Cliente> find(@PathVariable Integer id) { 
 		Cliente obj = cliService.buscar(id);//vai no serviço buscar o objeto pelo id		
 		return ResponseEntity.ok().body(obj);
 	}

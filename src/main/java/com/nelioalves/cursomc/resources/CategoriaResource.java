@@ -24,7 +24,7 @@ public class CategoriaResource {
 	
 	//metodo de busca que recebe um id via get e chama o serviço da classe CategoriaService para buscar a Categoria no BD
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)		
-	public ResponseEntity<?> find(@PathVariable Integer id) {
+	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		Categoria obj = catService.buscar(id);//vai no serviço buscar o objeto pelo id		
 		return ResponseEntity.ok().body(obj);
 	}
@@ -37,5 +37,14 @@ public class CategoriaResource {
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(cat.getId()).toUri();
 		return ResponseEntity.created(uri).build();
 	}
+	
+	//metodo de atualização que recebe o id e o objeto da Categoria via PUT e chama o serviço da classe CategoriaService para atualizar a Categoria no BD
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody Categoria cat, @PathVariable Integer id){
+		cat = catService.atualizar(cat);
+		return ResponseEntity.noContent().build();		
+	}
+	
+	
 	
 }
