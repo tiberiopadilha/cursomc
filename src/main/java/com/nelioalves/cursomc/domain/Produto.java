@@ -15,7 +15,6 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -29,9 +28,11 @@ public class Produto implements Serializable{
 	private String nome;
 	private double preco;
 	
-	//como a relação entre Categoria e Produto é de muito pra muito, deve ser criada outra tabela que vamos chamar de PRODUTO_CATEGORIA
-	//contendo as chaves estrangeiras da duas tabelas
-	@JsonBackReference //diz que no outro lado(Categoria) da associação ja foram buscados os objetos e omite a busca para nao da busca cíclica
+	/*como a relação entre Categoria e Produto é de muito pra muito, deve ser criada outra tabela que vamos chamar de PRODUTO_CATEGORIA
+	contendo as chaves estrangeiras da duas tabelas*/
+	@JsonIgnore /*Produto nao deve conhecer suas categorias(problema de referencia cíclica). Deve deixa a referencia ser gerenciada pelo json 
+	para permitir que somente que as categorias saibam a qual produtos pertencem(tipo relação de subclasse/ é um) e sejam serealizados, 
+	ignorando que Produto a conhecam, pois se permitir dos dois lados, dara erro na busca, erro de referencia cíclica.*/
 	@ManyToMany
 	@JoinTable(name = "PRODUTO_CATEGORIA", 
 	           joinColumns = @JoinColumn(name= "produto_id"), 

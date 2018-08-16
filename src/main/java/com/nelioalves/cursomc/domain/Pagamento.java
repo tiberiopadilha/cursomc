@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nelioalves.cursomc.enums.EstadoPagamento;
 
 @Entity
@@ -23,7 +23,9 @@ public abstract class Pagamento implements Serializable{
 	private Integer estado;
 	
 	//1 pagamento tem 1 pedido
-	@JsonBackReference //diz que no outro lado(Pedido) da associação ja foram buscados os objetos e omite a busca dos pedidos para nao da busca cíclica
+	@JsonIgnore /*Pagamento nao deve conhecer seu Pedido(problema de referencia cíclica). Deve deixar a referencia ser gerenciada pelo json 
+	para permitir que somente que o Pedido conheca o Pagamento e sejam serealizados, ignorando que Pagamento o conheca, pois se 
+	permitir dos dois lados, dara erro na busca, erro de referencia cíclica.*/
 	@OneToOne
 	@JoinColumn(name="pedido_id")//pedido_id é a chave estrangeira da classe Pedido na classe Pagamento no BD
 	@MapsId//para garantir que o id do pagamento sera o mesmo id do pedido

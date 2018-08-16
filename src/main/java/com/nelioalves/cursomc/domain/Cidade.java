@@ -9,8 +9,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Cidade implements Serializable{
 	
@@ -22,7 +20,7 @@ public class Cidade implements Serializable{
 	private String nome;
 	
 	//cada cidade faz parte de um estado
-	@JsonManagedReference //a classe Cidade conhece seu estado, mas não ao contrario
+	//a classe Cidade deve conhecer seu estado, mas não ao contrario. Esse controle foi feito na classe Estado
 	@ManyToOne//um estado tem varias cidades
 	@JoinColumn(name="estado_id")//nome do campo da chave estrangeira que referencia estado da tabela cidade no banco de dados
 	private Estado estado;
@@ -84,6 +82,6 @@ public class Cidade implements Serializable{
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}	
+	}
 
 }

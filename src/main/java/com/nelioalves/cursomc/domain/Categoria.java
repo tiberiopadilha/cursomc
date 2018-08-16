@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 @Entity
 public class Categoria implements Serializable{	
 	
@@ -22,9 +20,7 @@ public class Categoria implements Serializable{
 	private Integer id;
 	private String nome;	
 	
-	@JsonManagedReference //como a relação categoria e produtos é de mão dupla, deve deixa a referencia ser gerenciada pelo json para...
-	//...permitir que somente os produtos sejam serealizados(categoria conhecer seus produtos), pois se permitir dos dois lados, dara...
-	//... erro na busca. Essa referencia é gerenciada pelo json para vir os objetos(produtos) associados a cada categoria 
+	//A classe Categoria deve conhecer deve conhecer seus produtos, mas não ao contrario. Esse controle foi feito na classe Produto
 	//@ManyToMany: como existe uma relação muito para muitos entre Produtos e Categorias, mas já foi feito o mapeamento na classe produto
     //mappedBy: nessa classe so precisará dizer que o mapeamento foi feito na classe Produto, na lista categorias
 	@ManyToMany(mappedBy="categorias")

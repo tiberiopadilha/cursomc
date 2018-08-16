@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Endereco implements Serializable{	
@@ -25,7 +25,9 @@ public class Endereco implements Serializable{
 	private String cep;
 	
 	// 1 endereço tem 1 cliente
-	@JsonBackReference //endereço nao pode conhecer seus clientes(problema de referencia cíclica). Foi feito ao contrario na classe Cliente
+	@JsonIgnore /*Endereço nao deve conhecer seu Cliente (problema de referencia cíclica). Deve deixar a referencia ser gerenciada pelo json 
+	para permitir que somente que o Cliente saibam qual seus endereços e sejam serealizados, ignorando que Endereço o conheca, pois se 
+	permitir dos dois lados, dara erro na busca, erro de referencia cíclica.*/
 	@ManyToOne //1 cliente tem muitos endereços
 	@JoinColumn(name="cliente_id")//cliente_id é a chave estrangeira da classe Cliente na classe Endereco no BD
 	private Cliente cliente;

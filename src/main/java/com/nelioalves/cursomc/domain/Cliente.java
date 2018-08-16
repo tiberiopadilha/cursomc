@@ -14,8 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nelioalves.cursomc.enums.TipoCliente;
 
 @Entity
@@ -31,7 +30,7 @@ public class Cliente implements Serializable{
 	private Integer tipo; //armazena um inteiro para o tipo do cliente, mas vai expor um tipocliente no construtor pro sistema
 	
 	// 1 cliente tem vários endereços
-	@JsonManagedReference //a classe cliente conhece seus endereços, mas não ao contrario
+	//a classe Cliente deve conhecer seus endereços, mas não ao contrario. Esse controle foi feito na classe Endereço
 	@OneToMany(mappedBy="cliente") //já foi mapeado na classe Endereco pelo campo cliente
 	private List<Endereco> enderecos = new ArrayList<>() ;	
 	
@@ -41,7 +40,9 @@ public class Cliente implements Serializable{
 	private Set<String> telefones = new HashSet<>();
 	
 	//1 Cliente tem varios Pedidos. Cliente deve enxergar os pedidos
-	@JsonBackReference //diz que no outro lado(Pedido) da associação ja foram buscados os objetos e omite a busca dos pedidos para nao da busca cíclica
+	@JsonIgnore /*Cliente nao deve conhecer seu Pedido(problema de referencia cíclica). Deve deixar a referencia ser gerenciada pelo json 
+	para permitir somente que o Pedido conheca o Cliente e sejam serealizados, ignorando que Cliente o conheca, pois se permitir dos dois 
+	lados, dara erro na busca, erro de referencia cíclica.*/
 	@OneToMany(mappedBy="cliente")//ja foi mapeado na classe cliente pelo atributo cliente
 	private List<Pedido> pedidos = new ArrayList<>();
 	
