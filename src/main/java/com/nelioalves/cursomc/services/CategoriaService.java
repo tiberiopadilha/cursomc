@@ -1,5 +1,6 @@
 package com.nelioalves.cursomc.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,11 @@ public class CategoriaService {
 
 	@Autowired // faz com que a dependencia (CategoriaRepository repo) seja instanciada pelo spring				
 	private CategoriaRepository repo;
+	
+	//método que lista todas as categorias do BD
+	public List<Categoria> listarTodas() {			
+		return repo.findAll();			 
+	}
 	
 	//método que recebe um id do método find() da classe CategoriaResource para buscar a categoria correspondente no BD
 	public Categoria buscar(Integer id) {
