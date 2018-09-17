@@ -26,7 +26,7 @@ public class CategoriaResource {
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)		
 	public ResponseEntity<Categoria> find(@PathVariable Integer id) {
 		Categoria obj = catService.buscar(id);//vai no serviço buscar o objeto pelo id		
-		return ResponseEntity.ok().body(obj);
+		return ResponseEntity.ok().body(obj);//se deu tudo ok busca e retorna o objeto 
 	}
 	
 	//metodo que recebe um objeto Categoria via POST no formato json e chama o serviço da classe CategoriaService para inserir uma Categoria no BD
@@ -42,9 +42,13 @@ public class CategoriaResource {
 	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
 	public ResponseEntity<Void> update(@RequestBody Categoria cat, @PathVariable Integer id){
 		cat = catService.atualizar(cat);
-		return ResponseEntity.noContent().build();		
+		return ResponseEntity.noContent().build();//se deu tudo ok atualiza e não retorna nada		
 	}
 	
-	
-	
+	//metodo delete que recebe um id via delete e chama o serviço da classe CategoriaService e deleta a Categoria no BD
+		@RequestMapping(value="/{id}", method=RequestMethod.DELETE)		
+		public ResponseEntity<Void> delete(@PathVariable Integer id) {
+		catService.deletar(id);//vai no serviço para deletar o objeto pelo id		
+		return ResponseEntity.noContent().build();//se deu tudo ok deleta e não retorna nada
+		}
 }
